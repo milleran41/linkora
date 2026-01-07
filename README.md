@@ -1,5 +1,7 @@
 # Linkora
 
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Deployed-brightgreen)](https://milleran41.github.io/linkora)
+
 A free, offline, open-source link manager that works entirely in your browser.  
 No internet required. No tracking. No ads. Just your links — organized.
 
