@@ -1,9 +1,9 @@
 # Linkora
 
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Deployed-brightgreen)](https://milleran41.github.io/linkora)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Languages](https://img.shields.io/badge/12%20Languages-✓-blue)
-![Offline](https://img.shields.io/badge/Offline%20Capable-Yes-brightgreen)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
+[![Languages](https://img.shields.io/badge/12%20Languages-✓-blue)](https://github.com/milleran41/linkora#languages)
+[![Offline](https://img.shields.io/badge/Offline%20Capable-Yes-brightgreen)](https://github.com/milleran41/linkora#offline)
 
 A free, offline, open-source link manager that works entirely in your browser.  
 No internet required. No tracking. No ads. Just your links — organized.
