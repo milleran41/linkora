@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linkora</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🔗</text></svg>">
+</head>
+<body class="theme-light">
+  <header class="header">
+    <div class="header-left">
+      <button id="menuBtn">⋯</button>
+    </div>
+    <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
+      <button class="dropdown-item" id="openAboutBtn"></button>
+      <button class="dropdown-item" id="openGuideBtn2"></button>
+      <button class="dropdown-item" id="showFavouritesBtn"></button>
+      <button class="dropdown-item" id="exportDataBtn"></button>
+      <button class="dropdown-item" id="importDataBtn"></button>
+      <button class="dropdown-item" id="toggleThemeBtn"></button>
+      <button class="dropdown-item" id="openColorPickerBtn"></button>
+    </div>
+    <input type="text" id="searchInput" placeholder="..." 
+      style="margin-left: 12px; padding: 4px; border-radius: 4px; border: 1px solid var(--border); 
+             background: var(--bg); color: var(--text); width: 160px; display: none; position: absolute; 
+             left: 50px; top: 16px; z-index: 10;">
+    <div class="header-right">
+      <select id="langSelect">
+        <option value="en">🇬🇧 English</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="pt">🇵🇹 Português</option>
+        <option value="it">🇮🇹 Italiano</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="ar">🇸🇦 العربية</option>
+        <option value="ja">🇯🇵 日本語</option>
+        <option value="pl">🇵🇱 Polski</option>
+        <option value="tr">🇹🇷 Türkçe</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="categories" id="categoriesContainer"></div>
+    <div class="content-with-ads">
+      <div class="urls" id="urlsContainer"></div>
+      <aside class="ad-panel" id="adPanel"></aside>
+    </div>
+  </main>
+
+  <!-- УДАЛЕНО: #addUrlModal -->
+
+  <!-- Modal: About -->
+  <div class="modal" id="aboutModal" style="display: none;">
+    <h3 id="aboutTitle"></h3>
+    <p id="aboutDesc1"></p>
+    <p id="aboutDesc2"></p>
+    <p id="aboutVersion"></p>
+    <p>📩 <strong id="contactTitle"></strong><br>
+       <span id="contactInstructions"></span>
+    </p>
+    <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0; padding: 6px; background: var(--bg-alt); border-radius: 6px; width: fit-content;">
+      <span id="contactEmail" style="font-family: monospace; user-select: all;">linksaverpro.help@gmail.com</span>
+      <button id="copyEmailBtn"></button>
+    </div>
+    <span id="copyStatus" style="font-size: 12px; color: #2ecc71; height: 16px; display: block;"></span>
+  </div>
+
+  <!-- Modal: Guide -->
+  <div class="modal" id="guideModal" style="display: none;">
+    <h3 id="guideTitle"></h3>
+    <div id="guideContent"></div>
+  </div>
+
+  <!-- Modal: Support -->
+  <div class="modal" id="supportModal" style="display: none;">
+    <h3 id="supportModalTitle"></h3>
+    <p id="supportModalText"></p>
+    <div style="text-align: center; margin: 12px 0;">
+      <img src="assets/qr-donate.png" alt="Поддержать через Ko-fi"
+           style="max-width: 200px; max-height: 200px; border: 1px solid var(--border); border-radius: 8px;">
+    </div>
+    <button id="supportKofiExternalBtn" style="width: 100%; margin-top: 8px;">Поддержать проект</button>
+  </div>
+
+  <input type="color" id="colorPicker" style="display: none;" value="#4a6cf7" />
+  <input type="file" id="importFileInput" accept=".json" style="display: none;">
+
+  <script src="translations.js"></script>
+  <script>
+    // --- Функция локализации ---
+    function t(key) {
+      const lang = localStorage.getItem('lang') || 'ru';
+      return translations[lang]?.[key] || translations.ru?.[key] || key;
+    }
+
+    // --- Модальные окна ---
+    function openAbout() {
+      document.getElementById('aboutTitle').textContent = t('aboutTitle');
+      document.getElementById('aboutDesc1').innerHTML = `<strong>${t('appName')}</strong> — ${t('aboutContent')}`;
+      document.getElementById('aboutVersion').textContent = `${t('version')}: 1.0.0`;
+      document.getElementById('contactTitle').textContent = t('contactTitle');
+      document.getElementById('contactInstructions').textContent = t('contactInstructions');
+      document.getElementById('copyEmailBtn').textContent = t('copyBtn');
+      document.getElementById('aboutModal').style.display = 'block';
+    }
+
+    function closeAbout() {
+      document.getElementById('aboutModal').style.display = 'none';
+    }
+
+    function openGuide() {
+      document.getElementById('guideTitle').textContent = t('guideTitle');
+      document.getElementById('guideContent').innerHTML = t('fullInstruction');
+      document.getElementById('guideModal').style.display = 'block';
+    }
+
+    function closeGuide() {
+      document.getElementById('guideModal').style.display = 'none';
+    }
+
+    function openSupport() {
+      document.getElementById('supportModal').style.display = 'block';
+    }
+
+    function closeSupport() {
+      document.getElementById('supportModal').style.display = 'none';
+    }
+
+    // --- Обновление текста ---
+    function updateUIText() {
+      const setText = (id, key) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = t(key);
+      };
+
+      setText('openAboutBtn', 'about');
+      setText('openGuideBtn2', 'instruction');
+      setText('showFavouritesBtn', 'showFavourites');
+      setText('exportDataBtn', 'exportData');
+      setText('importDataBtn', 'importData');
+      setText('toggleThemeBtn', 'toggleTheme');
+      setText('openColorPickerBtn', 'openColorPicker');
+      setText('supportKofiExternalBtn', 'supportProject');
+    }
+
+    // --- Рекламная панель ---
+    function renderAdPanel() {
+      const adPanel = document.getElementById('adPanel');
+      if (!adPanel) return;
+
+      adPanel.innerHTML = `
+        <div class="ad-card">
+          <button id="openSupportBtn" style="width: 100%; text-align: center;">${t('supportProject')}</button>
+          <p>${t('adSupportDesc')}</p>
+        </div>
+        <div class="ad-card">
+          <button id="openGuideAd">${t('adGuideTitle')}</button>
+          <p>${t('adGuideDesc')}</p>
+        </div>
+      `;
+    }
+
+    // --- ЕДИНЫЙ ОБРАБОТЧИК КЛИКОВ ---
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('dropdownMenu');
+      const menuBtn = document.getElementById('menuBtn');
+
+      if (e.target.id === 'menuBtn') {
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        return;
+      }
+
+      const menuActions = {
+        openAboutBtn: openAbout,
+        openGuideBtn2: openGuide,
+        showFavouritesBtn: showFavourites,
+        exportDataBtn: exportData,
+        importDataBtn: importData,
+        toggleThemeBtn: toggleTheme,
+        openColorPickerBtn: openColorPicker
+      };
+
+      if (menuActions[e.target.id]) {
+        const action = menuActions[e.target.id];
+        if (typeof action === 'function') {
+          menu.style.display = 'none';
+          action();
+        }
+        return;
+      }
+
+      if (menu && getComputedStyle(menu).display === 'block') {
+        if (e.target !== menuBtn && !menu.contains(e.target)) {
+          menu.style.display = 'none';
+        }
+      }
+
+      const modalIds = ['aboutModal', 'guideModal', 'supportModal'];
+      modalIds.forEach(id => {
+        const modal = document.getElementById(id);
+        if (modal && getComputedStyle(modal).display === 'block' && !modal.contains(e.target)) {
+          modal.style.display = 'none';
+        }
+      });
+
+      if (e.target.id === 'copyEmailBtn') {
+        navigator.clipboard.writeText('linksaverpro.help@gmail.com').then(() => {
+          const status = document.getElementById('copyStatus');
+          if (status) {
+            status.textContent = t('copied');
+            setTimeout(() => status.textContent = '', 2000);
+          }
+        });
+      }
+
+      if (e.target.id === 'openGuideAd') {
+        openGuide();
+      } else if (e.target.id === 'openSupportBtn') {
+        openSupport();
+      }
+    });
+
+    // --- Смена языка ---
+    document.getElementById('langSelect').addEventListener('change', (e) => {
+      localStorage.setItem('lang', e.target.value);
+      updateUIText();
+      renderAdPanel();
+      if (typeof renderCategories === 'function') renderCategories();
+    });
+
+    // --- Инициализация ---
+    (function initApp() {
+      if (!localStorage.getItem('lang')) {
+        localStorage.setItem('lang', 'ru');
+      }
+      updateUIText();
+      renderAdPanel();
+      document.getElementById('searchInput').placeholder = t('searchPlaceholder');
+    })();
+
+	// --- Кнопка поддержки (исправлено) ---
+	document.getElementById('supportKofiExternalBtn')?.addEventListener('click', (e) => {
+	  e.stopPropagation();
+	  const url = 'https://ko-fi.com/linkora'; // ← убраны пробелы
+	  if (window.__TAURI__) {
+		window.__TAURI__.core.invoke('plugin:shell|open', { path: url }); // ← path, не uri
+	  } else {
+		window.open(url, '_blank', 'noopener,noreferrer');
+	  }
+	});
+  </script>
+
+  <script src="app.js"></script>
+</body>
+</html>
