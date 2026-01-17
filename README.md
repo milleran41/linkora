@@ -17,7 +17,7 @@ No internet required. No tracking. No ads. Just your links — organized.
 👉 [https://milleran41.github.io/linkora](https://milleran41.github.io/linkora)
 
 💻 **Download for Windows**  
-📥 [linkora-v1.1-win.zip](https://github.com/milleran41/linkora/releases/download/v1.1.0/linkora-v1.0-win.zip)  
+📥 [linkora-v1.0-win.zip](https://github.com/milleran41/linkora/releases/download/v1.1.0/linkora-v1.0-win.zip)  
 *(Extract and run `linkora.exe` — no installation needed)*
 
 > ⚠️ **Note for Windows users**:  
