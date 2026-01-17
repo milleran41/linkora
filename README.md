@@ -1,25 +1,30 @@
 # Linkora
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Deployed-brightgreen)](https://milleran41.github.io/linkora)
-[![License](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
-[![Languages](https://img.shields.io/badge/12%20Languages-✓-blue)](https://github.com/milleran41/linkora#languages)
-[![Offline](https://img.shields.io/badge/Offline%20Capable-Yes-brightgreen)](https://github.com/milleran41/linkora#offline)
-
 A free, offline, open-source link manager that works entirely in your browser.  
 No internet required. No tracking. No ads. Just your links — organized.
 
 ![Welcome screen](https://raw.githubusercontent.com/milleran41/linkora/main/assets/welcome.png)
 
 ✨ **Features**  
-- Works 100% offline — open `index.html` directly or serve locally  
+- Works 10 **offline** — open `index.html` directly or serve locally  
 - Save and organize links in categories  
 - Drag & drop links between categories  
 - See screenshot previews on hover  
-- Available in 12 languages  
+- Available in **12 languages**  
 - Completely free, with optional donations  
 
-🌐 **Try it online**  
+🌐 **Try it online (offline-compatible)**  
 👉 [https://milleran41.github.io/linkora](https://milleran41.github.io/linkora)
+
+💻 **Download for Windows**  
+📥 [linkora-v1.1-win.zip](https://github.com/milleran41/linkora/releases/download/v1.1.0/linkora-v1.1-win.zip)  
+*(Extract and run `linkora.exe` — no installation needed)*
+
+> ⚠️ **Note for Windows users**:  
+> On first launch, Windows may show a security warning ("Unknown publisher").  
+> This is normal for unsigned open-source apps.  
+> The app is **clean** (verified on [VirusTotal](https://www.virustotal.com)) and contains **no malware**.  
+> To proceed: click **"More info" → "Run anyway"**.
 
 💖 **Support the Project**  
 Linkora is free and open-source. If you find it useful, you can support its development:
@@ -36,21 +41,7 @@ Or scan the QR code:
 English, Русский, Español, Deutsch, Français, Italiano, Português, العربية, 中文, 日本語, Polski, Türkçe
 
 📥 **How to Use**  
-1. Clone or download this repository  
-2. Open `index.html` in your browser  
-   - For the best experience (e.g., correct MIME types), run:  
-     ```bash
-     npx serve
-     ```  
-3. (Optional) Place `index.html` on your desktop for one-click access  
-4. Start organizing your links!
-
-🤝 **Contributing**  
-Translations and bug fixes are welcome!  
-If you'd like to add or improve a language, check the `lang/` folder and open a pull request.
-
-📜 **License**  
-MIT License — feel free to use, modify, and share.
-
-Made with ❤️ by Andreas  
-Not affiliated with any other product named "Linkora".
+- **In browser**: Open `index.html` directly (works offline!)  
+- **For best experience**: Run locally with:
+  ```bash
+  npx serve
