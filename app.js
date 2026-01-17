@@ -53,7 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
   loadLanguage();
   loadTheme();
   renderCategories();
-  //setupExportImport();
+
+  // 🔥 КРИТИЧЕСКИ ВАЖНО: разрешить drop везде
+  document.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
 });
 
 // === Темы ===
@@ -195,7 +199,7 @@ function renderCategories() {
     btn.textContent = displayCatName;
     btn.className = 'category-btn';
     btn.dataset.id = cat.id;
-    btn.draggable = true;
+    btn.setAttribute('draggable', 'true');
     btn.title = cat.name;
 
     btn.onclick = () => {
@@ -207,9 +211,9 @@ function renderCategories() {
       }
     };
 
-    // Drag & drop категории
+    // Drag & drop — сортировка категорий
     btn.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', cat.id);
+      e.dataTransfer.setData('application/linkora-category', cat.id);
       btn.classList.add('dragging');
     });
 
@@ -219,7 +223,9 @@ function renderCategories() {
         .forEach(el => el.classList.remove('drop-before', 'drop-after'));
     });
 
-    btn.addEventListener('dragover', (e) => e.preventDefault());
+    btn.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
 
     btn.addEventListener('dragenter', (e) => {
       e.preventDefault();
@@ -228,8 +234,7 @@ function renderCategories() {
 
       const rect = btn.getBoundingClientRect();
       const mid = (rect.left + rect.right) / 2;
-      const x = e.clientX;
-      if (x < mid) {
+      if (e.clientX < mid) {
         btn.classList.add('drop-before');
       } else {
         btn.classList.add('drop-after');
@@ -238,39 +243,36 @@ function renderCategories() {
 
     btn.addEventListener('drop', (e) => {
       e.preventDefault();
-      const draggedId = e.dataTransfer.getData('text/plain');
-      if (draggedId === cat.id) return;
 
-      const fromIndex = categories.findIndex(c => c.id === draggedId);
+      // 1. Проверяем, перетаскивается ли ССЫЛКА
+      const urlDataStr = e.dataTransfer.getData('application/linkora-url');
+      if (urlDataStr) {
+        let data;
+        try { data = JSON.parse(urlDataStr); } catch { /* ignore */ }
+        if (data && data.type === 'url') {
+          const draggedUrlId = data.urlId;
+          const fromCatId = data.fromCategoryId;
+          if (fromCatId !== cat.id) {
+            moveUrlBetweenCategories(draggedUrlId, fromCatId, cat.id, 'end');
+          }
+          return;
+        }
+      }
+
+      // 2. Проверяем, перетаскивается ли КАТЕГОРИЯ
+      const draggedCatId = e.dataTransfer.getData('application/linkora-category');
+      if (!draggedCatId || draggedCatId === cat.id) return;
+
+      const fromIndex = categories.findIndex(c => c.id === draggedCatId);
       let toIndex = categories.findIndex(c => c.id === cat.id);
-      if (btn.classList.contains('drop-after')) toIndex += 1;
+      if (btn.classList.contains('drop-after')) {
+        toIndex += 1;
+      }
 
       const [moved] = categories.splice(fromIndex, 1);
       categories.splice(toIndex, 0, moved);
       saveData();
       renderCategories();
-    });
-
-    // Drop URL на категорию
-    btn.addEventListener('dragover', (e) => e.preventDefault());
-    btn.addEventListener('dragenter', (e) => {
-      e.preventDefault();
-      document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
-      btn.classList.add('drop-target');
-    });
-    btn.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const dataStr = e.dataTransfer.getData('text/plain');
-      let data;
-      try { data = JSON.parse(dataStr); } catch { return; }
-      if (data.type === 'url') {
-        const draggedUrlId = data.urlId;
-        const fromCatId = data.fromCategoryId;
-        if (fromCatId !== cat.id) {
-          moveUrlBetweenCategories(draggedUrlId, fromCatId, cat.id, 'end');
-        }
-      }
-      btn.classList.remove('drop-target');
     });
 
     // Обёртка с кнопкой удаления
@@ -399,7 +401,9 @@ function renderUrlCards(urlList, duplicateMap = {}, contextCategoryId = null) {
     const card = document.createElement('div');
     card.className = 'url-card';
     card.dataset.id = url.id;
-    card.draggable = viewMode !== 'favourites';
+    if (viewMode !== 'favourites') {
+	  card.setAttribute('draggable', 'true');
+	}
 
     const isDuplicate = duplicateMap[url.url] > 1;
     const isFavorite = url.favorite || false;
@@ -441,42 +445,51 @@ function renderUrlCards(urlList, duplicateMap = {}, contextCategoryId = null) {
       }
     };
 
-    // Drag & drop — только в режиме категории
-    if (viewMode !== 'favourites' && contextCategoryId) {
-      card.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', JSON.stringify({
-          type: 'url',
-          urlId: url.id,
-          fromCategoryId: contextCategoryId
-        }));
-        card.classList.add('dragging-url');
-      });
+	// Drag & drop — только в режиме категории
+	if (viewMode !== 'favourites' && contextCategoryId) {
+	  card.addEventListener('dragstart', (e) => {
+		e.dataTransfer.setData('application/linkora-url', JSON.stringify({
+		  type: 'url',
+		  urlId: url.id,
+		  fromCategoryId: contextCategoryId
+		}));
+		card.classList.add('dragging-url');
+		// ❌ УДАЛИ эту строку:
+		// card.style.pointerEvents = 'none';
+	  });
 
-      card.addEventListener('dragend', () => {
-        card.classList.remove('dragging-url');
-        document.querySelectorAll('.drop-target, .drop-between')
-          .forEach(el => el.classList.remove('drop-target', 'drop-between'));
-      });
+	  card.addEventListener('dragend', () => {
+		card.classList.remove('dragging-url');
+		// ❌ И эту:
+		// card.style.pointerEvents = '';
+		document.querySelectorAll('.drop-between')
+		  .forEach(el => el.classList.remove('drop-between'));
+	  });
 
-      card.addEventListener('dragover', (e) => e.preventDefault());
-      card.addEventListener('dragenter', (e) => {
-        e.preventDefault();
-        document.querySelectorAll('.drop-between').forEach(el => el.classList.remove('drop-between'));
-        card.classList.add('drop-between');
-      });
+	  card.addEventListener('dragover', (e) => e.preventDefault());
 
-      card.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const dataStr = e.dataTransfer.getData('text/plain');
-        let data;
-        try { data = JSON.parse(dataStr); } catch { return; }
-        if (data.type !== 'url') return;
-        const draggedUrlId = data.urlId;
-        const fromCatId = data.fromCategoryId;
-        if (draggedUrlId === url.id && fromCatId === contextCategoryId) return;
-        moveUrlBetweenCategories(draggedUrlId, fromCatId, contextCategoryId, 'before', url.id);
-      });
-    }
+	  card.addEventListener('dragenter', (e) => {
+		e.preventDefault();
+		document.querySelectorAll('.drop-between').forEach(el => el.classList.remove('drop-between'));
+		card.classList.add('drop-between');
+	  });
+
+	  card.addEventListener('drop', (e) => {
+		e.preventDefault();
+		const dataStr = e.dataTransfer.getData('application/linkora-url');
+		if (!dataStr) return;
+
+		let data;
+		try { data = JSON.parse(dataStr); } catch { return; }
+		if (!data || data.type !== 'url') return;
+
+		const draggedUrlId = data.urlId;
+		const fromCatId = data.fromCategoryId;
+		if (draggedUrlId === url.id && fromCatId === contextCategoryId) return;
+
+		moveUrlBetweenCategories(draggedUrlId, fromCatId, contextCategoryId, 'before', url.id);
+	  });
+	}
 
     // Всплывающее окно
     card.addEventListener('mouseenter', (e) => {
@@ -604,55 +617,65 @@ function renderUrlCards(urlList, duplicateMap = {}, contextCategoryId = null) {
 
 // === Модальные окна ===
 function openScreenshotModal(urlObj, categoryId) {
-  const modal = showModal(`
+  const modal = showModal(
+    `
     <h3>${t('screenshotTitle')} ${urlObj.title || urlObj.url}</h3>
     <p>${t('screenshotInstructions')}</p>
     <button id="openUrlBtn">${t('openLink')}</button>
     <button id="pasteScreenshotBtn">${t('pasteScreenshot')}</button>
     <div id="preview" style="margin-top: 10px; max-width: 300px;"></div>
     <button id="closeModalBtn">${t('close')}</button>
-  `);
-
-  document.getElementById('openUrlBtn').onclick = () => window.open(urlObj.url, '_blank');
-
-  document.getElementById('pasteScreenshotBtn').onclick = async () => {
-    try {
-      const clipboardItems = await navigator.clipboard.read();
-      let blob = null;
-      for (const item of clipboardItems) {
-        if (item.types.includes('image/png')) {
-          blob = await item.getType('image/png');
-          break;
+  `,
+    (modalElement) => {
+      modalElement.querySelector('#openUrlBtn').onclick = (e) => {
+        e.stopPropagation();
+        if (window.__TAURI__) {
+          window.__TAURI__.core.invoke('plugin:shell|open', { path: urlObj.url });
+        } else {
+          window.open(urlObj.url, '_blank', 'noopener,noreferrer');
         }
-        if (item.types.includes('image/jpeg')) {
-          blob = await item.getType('image/jpeg');
-          break;
+      };
+
+      modalElement.querySelector('#pasteScreenshotBtn').onclick = async () => {
+        try {
+          const clipboardItems = await navigator.clipboard.read();
+          let blob = null;
+          for (const item of clipboardItems) {
+            if (item.types.includes('image/png')) {
+              blob = await item.getType('image/png');
+              break;
+            }
+            if (item.types.includes('image/jpeg')) {
+              blob = await item.getType('image/jpeg');
+              break;
+            }
+          }
+          if (blob) {
+            const reader = new FileReader();
+            reader.onload = () => {
+              urlObj.screenshot = reader.result;
+              saveData();
+              const img = document.createElement('img');
+              img.src = reader.result;
+              img.style.maxWidth = '100%';
+              img.style.borderRadius = '4px';
+              modalElement.querySelector('#preview').innerHTML = '';
+              modalElement.querySelector('#preview').appendChild(img);
+            };
+            reader.readAsDataURL(blob);
+          } else {
+            showMessage(t('clipboardNoImage'));
+          }
+        } catch (err) {
+          showMessage(t('clipboardError'));
         }
-      }
-      if (blob) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          urlObj.screenshot = reader.result;
-          saveData();
-          const img = document.createElement('img');
-          img.src = reader.result;
-          img.style.maxWidth = '100%';
-          img.style.borderRadius = '4px';
-          document.getElementById('preview').innerHTML = '';
-          document.getElementById('preview').appendChild(img);
-        };
-        reader.readAsDataURL(blob);
-      } else {
-        showMessage(t('clipboardNoImage'));
-      }
-    } catch (err) {
-      showMessage(t('clipboardError'));
+      };
+
+      modalElement.querySelector('#closeModalBtn').onclick = () => {
+        document.body.removeChild(modalElement);
+      };
     }
-  };
-
-  document.getElementById('closeModalBtn').onclick = () => {
-    document.body.removeChild(modal);
-  };
+  );
 }
 
 function openEditUrlModal(urlObj, categoryId) {
