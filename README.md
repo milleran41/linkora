@@ -1,47 +1,75 @@
 # Linkora
 
-A free, offline, open-source link manager that works entirely in your browser.  
-No internet required. No tracking. No ads. Just your links — organized.
+**Linkora** is a free, offline, open-source link manager for saving and organizing your favorite websites.
 
-![Welcome screen](https://raw.githubusercontent.com/milleran41/linkora/main/assets/welcome.png)
+No tracking. No ads. No cloud account. Just your links, stored locally and available whenever you need them.
 
-✨ **Features**  
-- Works 10 **offline** — open `index.html` directly or serve locally  
-- Save and organize links in categories  
-- Drag & drop links between categories  
-- See screenshot previews on hover  
-- Available in **12 languages**  
-- Completely free, with optional donations  
+![Linkora preview](assets/linkora-preview.jpg)
 
-🌐 **Try it online (offline-compatible)**  
-👉 [https://milleran41.github.io/linkora](https://milleran41.github.io/linkora)
+## What's new in v2.0
 
-💻 **Download for Windows**  
-📥 [linkora-v1.0-win.zip](https://github.com/milleran41/linkora/releases/download/v1.1.0/linkora-v1.0-win.zip)  
-*(Extract and run `linkora.exe` — no installation needed)*
+- Native Windows portable app built with Tauri v2
+- Custom HSL theme editor with live preview
+- Full backward compatibility with the browser version
+- Improved link organization, favorites, search, import, and export
+- Interface available in 12 languages
 
-> ⚠️ **Note for Windows users**:  
-> On first launch, Windows may show a security warning ("Unknown publisher").  
-> This is normal for unsigned open-source apps.  
-> The app is **clean** (verified on [VirusTotal](https://www.virustotal.com)) and contains **no malware**.  
-> To proceed: click **"More info" → "Run anyway"**.
+## Features
 
-💖 **Support the Project**  
-Linkora is free and open-source. If you find it useful, you can support its development:
+- **100% offline**: open `index.html` directly or use the Windows app
+- **Categories**: organize links into clear groups
+- **Drag and drop**: move links between categories
+- **Screenshots and descriptions**: attach visual context to saved links
+- **Hover previews**: quickly inspect saved links
+- **Favorites**: keep important links close
+- **Smart search**: filter by URL or description
+- **Import and export**: back up your links as JSON
+- **Themes**: Light, Dark, and custom HSL colors
+- **Multilingual UI**: English, Русский, Español, Deutsch, Français, Italiano, Português, العربية, 中文, 日本語, Polski, Türkçe
+
+## Try it online
+
+[Open Linkora in your browser](https://milleran41.github.io/linkora)
+
+The web version is offline-compatible after loading and can also be opened locally from `index.html`.
+
+## Download for Windows
+
+Download the latest portable Windows build from [GitHub Releases](https://github.com/milleran41/linkora/releases).
+
+Extract the archive and run `Linkora.exe`. No installation is required.
+
+> Windows may show an "Unknown publisher" warning on first launch. This is normal for unsigned open-source apps. Click **More info** and then **Run anyway** if you trust the downloaded release.
+
+## Browser version
+
+Clone or download this repository:
+
+```bash
+git clone https://github.com/milleran41/linkora.git
+cd linkora
+```
+
+Then open `index.html` in your browser.
+
+For a local web server:
+
+```bash
+npx serve
+```
+
+## Support the project
+
+Linkora is free and open source. If you find it useful, you can support development:
 
 [![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/linkora)
 
-Or scan the QR code:  
+Or scan the QR code:
 
-![QR Code](https://raw.githubusercontent.com/milleran41/linkora/main/assets/qr-donate.png)
+![QR Code](assets/qr-donate.png)
 
-*Any amount helps — thank you!*
+Thank you for any support.
 
-🌍 **Languages**  
-English, Русский, Español, Deutsch, Français, Italiano, Português, العربية, 中文, 日本語, Polski, Türkçe
+## License
 
-📥 **How to Use**  
-- **In browser**: Open `index.html` directly (works offline!)  
-- **For best experience**: Run locally with:
-  ```bash
-  npx serve
+MIT License
