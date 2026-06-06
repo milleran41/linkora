@@ -35,9 +35,13 @@ The web version is offline-compatible after loading and can also be opened local
 
 ## Download for Windows
 
-Download the latest portable Windows build from [GitHub Releases](https://github.com/milleran41/linkora/releases).
+Download the portable Windows app directly:
 
-Extract the archive and run `Linkora.exe`. No installation is required.
+[Download Linkora.exe](https://github.com/milleran41/linkora/releases/download/v2.0.0/Linkora.exe)
+
+You can also find all downloads on the [GitHub Releases](https://github.com/milleran41/linkora/releases) page.
+
+Run `Linkora.exe`. No installation is required.
 
 > Windows may show an "Unknown publisher" warning on first launch. This is normal for unsigned open-source apps. Click **More info** and then **Run anyway** if you trust the downloaded release.
 
