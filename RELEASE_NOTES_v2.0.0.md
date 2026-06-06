@@ -4,7 +4,7 @@
 
 ### Скачать
 
-[Скачать Linkora.exe](https://github.com/milleran41/linkora/releases/download/v2.0.0/Linkora.exe)
+[Скачать Linkora.exe](https://raw.githubusercontent.com/milleran41/linkora/main/downloads/Linkora.exe)
 
 Запустите `Linkora.exe`. Установка не требуется.
 

@@ -37,7 +37,7 @@ The web version is offline-compatible after loading and can also be opened local
 
 Download the portable Windows app directly:
 
-[Download Linkora.exe](https://github.com/milleran41/linkora/releases/download/v2.0.0/Linkora.exe)
+[Download Linkora.exe](https://raw.githubusercontent.com/milleran41/linkora/main/downloads/Linkora.exe)
 
 You can also find all downloads on the [GitHub Releases](https://github.com/milleran41/linkora/releases) page.
 
