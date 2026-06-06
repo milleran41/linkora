@@ -25,7 +25,7 @@ No tracking. No ads. No cloud account. Just your links, stored locally and avail
 - **Smart search**: filter by URL or description
 - **Import and export**: back up your links as JSON
 - **Themes**: Light, Dark, and custom HSL colors
-- **Multilingual UI**: English, Русский, Español, Deutsch, Français, Italiano, Português, العربية, 中文, 日本語, Polski, Türkçe
+- **Multilingual UI**: English, Russian, Spanish, German, French, Italian, Portuguese, Arabic, Chinese, Japanese, Polish, Turkish
 
 ## Try it online
 

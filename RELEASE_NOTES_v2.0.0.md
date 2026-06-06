@@ -1,19 +1,19 @@
 ## Linkora v2.0.0
 
-Новая portable-версия Linkora для Windows.
+New portable Windows version of Linkora.
 
-### Скачать
+### Download
 
-[Скачать Linkora.exe](https://raw.githubusercontent.com/milleran41/linkora/main/downloads/Linkora.exe)
+[Download Linkora.exe](https://raw.githubusercontent.com/milleran41/linkora/main/downloads/Linkora.exe)
 
-Запустите `Linkora.exe`. Установка не требуется.
+Run `Linkora.exe`. No installation is required.
 
-### Что нового
+### What's new
 
-- Нативное Windows-приложение: `Linkora.exe`
-- Редактор темы HSL с предпросмотром
-- Браузерная offline-версия по-прежнему поддерживается
-- 12 языков интерфейса
-- Избранное, поиск, импорт и экспорт
+- Native Windows app: `Linkora.exe`
+- HSL theme editor with live preview
+- Offline browser version is still supported
+- 12 interface languages
+- Favorites, search, import, and export
 
-> Windows может показать предупреждение "Unknown publisher" при первом запуске. Это нормально для неподписанных open-source приложений.
+> Windows may show an "Unknown publisher" warning on first launch. This is normal for unsigned open-source apps.
